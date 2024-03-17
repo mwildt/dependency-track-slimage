@@ -14,15 +14,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build -f apiserver/apiserver.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-apiserver:latest apiserver
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: 'registry.ohrenpirat.de:5000/mwildt/dependency-track-apiserver:latest'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
     - name: Create Trivy sbom
       uses: aquasecurity/trivy-action@master
       with:
@@ -43,6 +34,14 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build -f frontend/frontend.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-frontend:latest frontend
+    - name: Create Trivy sbom
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'registry.ohrenpirat.de:5000/mwildt/dependency-track-frontend:latest'
+        format: 'cyclonedx'
+        exit-code: '1'
+        ignore-unfixed: true
+        output: dependency-track-apiserver.sbom.json
     - name: Login Registry
       run: echo ${{ secrets.DOCKER_REPO_KEY }} | docker login -u github-build --password-stdin registry.ohrenpirat.de:5000
     - name: Docker Push
