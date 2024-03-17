@@ -2,6 +2,7 @@ ARG ARCHIVE_NAME=frontend-dist.zip
 ARG UID=1001
 ARG GID=1001
 
+
 FROM registry.suse.com/bci/golang:1.22 as build
 
 MAINTAINER malte.wildt

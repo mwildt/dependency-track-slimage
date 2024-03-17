@@ -3,20 +3,36 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"os"
+	"strings"
 )
+
+type fileHandler struct {
+	root http.FileSystem
+}
+
+func (f fileHandler) Open(name string) (http.File, error) {
+	file, err := f.root.Open(name)
+	if os.IsNotExist(err) {
+		return f.root.Open("./index.html") // Versuche index.html, wenn die Datei nicht gefunden wird
+	}
+	return file, err
+}
 
 func main() {
 
-	fs := http.FileServer(http.Dir("./dist"))
+	staticResourcesHandler := http.FileServer(fileHandler{http.Dir("./dist")})
+
+	apiTarget, _ := url.Parse(os.Getenv("API_SERVICE_URL"))
+	apiHandler := httputil.NewSingleHostReverseProxy(apiTarget)
 
 	http.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Log any errors that occur during file serving
-		err := recover()
-		if err != nil {
-			log.Printf("Error serving static file: %s", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		if strings.HasPrefix(r.URL.Path, "/api/") {
+			apiHandler.ServeHTTP(w, r)
 		} else {
-			fs.ServeHTTP(w, r)
+			staticResourcesHandler.ServeHTTP(w, r)
 		}
 	}))
 
