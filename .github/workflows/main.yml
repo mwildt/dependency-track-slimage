@@ -1,0 +1,31 @@
+name: Build
+
+env:
+  version: $(date +%s)
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build -f apiserver/apiserver.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-apiserver:latest  apiserver
+    - name: Login Registry
+      run: echo ${{ secrets.DOCKER_REPO_KEY }} | docker login -u github-build --password-stdin registry.ohrenpirat.de:5000
+    - name: Docker Push
+      run: docker push registry.ohrenpirat.de:5000/mwildt/dependency-track-apiserver:latest
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build -f frontend/frontend.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-frontend:latest  apiserver
+    - name: Login Registry
+      run: echo ${{ secrets.DOCKER_REPO_KEY }} | docker login -u github-build --password-stdin registry.ohrenpirat.de:5000
+    - name: Docker Push
+      run: docker push registry.ohrenpirat.de:5000/mwildt/dependency-track-frontend:latest
