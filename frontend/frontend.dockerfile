@@ -24,7 +24,7 @@ RUN unzip ${ARCHIVE_NAME}
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./main.go
 
-FROM registry.suse.com/bci/bci-micro:15.5
+FROM registry.suse.com/bci/bci-micro:15.6
 ARG ARCHIVE_NAME
 ARG UID
 ARG GID
