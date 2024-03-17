@@ -22,6 +22,11 @@ jobs:
         exit-code: '1'
         ignore-unfixed: true
         output: dependency-track-apiserver.sbom.json
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-track-apiserver.sbom.json
+        path: dependency-track-apiserver.sbom.json
     - name: Login Registry
       run: echo ${{ secrets.DOCKER_REPO_KEY }} | docker login -u github-build --password-stdin registry.ohrenpirat.de:5000
     - name: Docker Push
@@ -41,7 +46,12 @@ jobs:
         format: 'cyclonedx'
         exit-code: '1'
         ignore-unfixed: true
-        output: dependency-track-apiserver.sbom.json
+        output: dependency-track-frontend.sbom.json
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-track-frontend.sbom.json
+        path: dependency-track-frontend.sbom.json    
     - name: Login Registry
       run: echo ${{ secrets.DOCKER_REPO_KEY }} | docker login -u github-build --password-stdin registry.ohrenpirat.de:5000
     - name: Docker Push
