@@ -1,11 +1,30 @@
-version: '3.7'
-
 services:
+
+  database:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_USER=dtrack
+      - POSTGRES_DB=dtrack
+    volumes:
+      - ./data/postgres/:/var/lib/postgresql/data/
+
   dtrack-apiserver:
     image: dtrack/apiserver
     build:
       context: ./apiserver
       dockerfile: apiserver.dockerfile
+    environment:
+     - ALPINE_DATABASE_MODE=external
+     - ALPINE_DATABASE_URL=jdbc:postgresql://database:5432/dtrack
+     - ALPINE_DATABASE_DRIVER=org.postgresql.Driver
+     - ALPINE_DATABASE_USERNAME=dtrack
+     - ALPINE_DATABASE_PASSWORD=changeme
+     - ALPINE_DATABASE_POOL_ENABLED=true
+     - ALPINE_DATABASE_POOL_MAX_SIZE=20
+     - ALPINE_DATABASE_POOL_MIN_IDLE=10
+     - ALPINE_DATABASE_POOL_IDLE_TIMEOUT=300000
+     - ALPINE_DATABASE_POOL_MAX_LIFETIME=600000
     deploy:
       resources:
         limits:
