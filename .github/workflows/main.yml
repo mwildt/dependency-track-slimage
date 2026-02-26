@@ -23,7 +23,7 @@ jobs:
         ignore-unfixed: true
         output: dependency-track-apiserver.sbom.json
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dependency-track-apiserver.sbom.json
         path: dependency-track-apiserver.sbom.json
@@ -48,7 +48,7 @@ jobs:
         ignore-unfixed: true
         output: dependency-track-frontend.sbom.json
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: dependency-track-frontend.sbom.json
         path: dependency-track-frontend.sbom.json    
