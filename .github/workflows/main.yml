@@ -11,7 +11,7 @@ jobs:
   build-backend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Build the Docker image
       run: docker build -f apiserver/apiserver.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-apiserver:latest apiserver
     - name: Create Trivy sbom
@@ -36,7 +36,7 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Build the Docker image
       run: docker build -f frontend/frontend.dockerfile --tag registry.ohrenpirat.de:5000/mwildt/dependency-track-frontend:latest frontend
     - name: Create Trivy sbom
