@@ -3,7 +3,7 @@ ARG UID=1001
 ARG GID=1001
 
 
-FROM registry.suse.com/bci/golang:1.22 as build
+FROM registry.suse.com/bci/golang:1.27 as build
 
 MAINTAINER malte.wildt
 
